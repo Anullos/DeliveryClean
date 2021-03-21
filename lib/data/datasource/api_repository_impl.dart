@@ -1,4 +1,6 @@
+import 'package:delivery_thema/data/productos.dart';
 import 'package:delivery_thema/domain/exception/auth_exception.dart';
+import 'package:delivery_thema/domain/models/product.dart';
 import 'package:delivery_thema/domain/models/user.dart';
 import 'package:delivery_thema/domain/repository/api_repository_interface.dart';
 import 'package:delivery_thema/domain/response/login_response.dart';
@@ -34,5 +36,11 @@ class ApiRepositoryImpl extends ApiRepositoryInterface {
   @override
   Future<void> logout(String token) async {
     print('borrando token del server');
+  }
+
+  @override
+  Future<List<Product>> getProducts() async{
+    await Future.delayed(const Duration(seconds: 1));
+    return products;
   }
 }

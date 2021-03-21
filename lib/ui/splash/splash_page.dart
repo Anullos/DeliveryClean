@@ -1,21 +1,48 @@
+import 'package:delivery_thema/domain/repository/api_repository_interface.dart';
+import 'package:delivery_thema/domain/repository/local_repository_interface.dart';
+import 'package:delivery_thema/ui/home/home_page.dart';
 import 'package:delivery_thema/ui/login/login_page.dart';
+import 'package:delivery_thema/ui/splash/splash_controller.dart';
 import 'package:delivery_thema/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key key}) : super(key: key);
+
+  static Widget init(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => SplashController(
+        apiRepositoryInterface: context.read<ApiRepositoryInterface>(),
+        localRepositoryInterface: context.read<LocalRepositoryInterface>(),
+      ),
+      builder: (_, __) => SplashPage(),
+    );
+  }
 
   @override
   _SplashPageState createState() => _SplashPageState();
 }
 
 class _SplashPageState extends State<SplashPage> {
+  void _init() async {
+    final bloc = context.read<SplashController>();
+    final result = await bloc.validateSession();
+    if (result) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (_) => HomePage.init(context),
+      ));
+    } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (_) => LoginPage.init(context),
+      ));
+    }
+  }
+
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => LoginPage()),
-      );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _init();
     });
     super.initState();
   }

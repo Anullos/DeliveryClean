@@ -1,5 +1,7 @@
+import 'package:delivery_thema/ui/home/home_controller.dart';
 import 'package:delivery_thema/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class NavigationBar extends StatelessWidget {
   final int index;
@@ -10,6 +12,8 @@ class NavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<HomeController>(context);
+    final user = bloc.user;
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: DecoratedBox(
@@ -73,11 +77,15 @@ class NavigationBar extends StatelessWidget {
               ),
             ),
             InkWell(
-              onTap: () => onIndexSelected(4),
-              child: CircleAvatar(
-                radius: 15.0,
-                backgroundColor: Colors.red,
-              ),
+              onTap: () {
+                onIndexSelected(4);
+              },
+              child: user?.image != null
+                  ? CircleAvatar(
+                      radius: 15.0,
+                      backgroundColor: Colors.red,
+                    )
+                  : const SizedBox.shrink(),
             ),
           ],
         ),
